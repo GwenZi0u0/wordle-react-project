@@ -6,15 +6,15 @@ function WordGame() {
   const state = useContext(GameContext);
   const dispatch = useContext(GameDispatchContext);
 
-  function handleKeyDown(event) {
-    if (event.key.match(/^[a-zA-Z]$/i)) {
-      dispatch({ type: ACTIONS.ADD_LETTER, payload: event.key });
-    } else if (event.key === "Backspace") {
-      dispatch({ type: ACTIONS.REMOVE_LETTER });
-    }
-  }
-
   useEffect(() => {
+    function handleKeyDown(event) {
+      if (event.key.match(/^[a-zA-Z]$/i)) {
+        dispatch({ type: ACTIONS.ADD_LETTER, payload: event.key });
+      } else if (event.key === "Backspace") {
+        dispatch({ type: ACTIONS.REMOVE_LETTER });
+      }
+    }
+
     window.addEventListener("keydown", handleKeyDown);
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
