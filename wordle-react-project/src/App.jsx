@@ -1,13 +1,14 @@
 import "./App.css";
+import { GameProvider } from "./GameContext";
+import WordGame from "./WordGame";
 
 function App() {
   return (
-    <div className="App">
-      <p className="bg-red-500 text-white">
-        Hello Vite + React + Tailwind CSS!
-      </p>
-    </div>
+    <GameProvider>
+      <div className="App">
+        <WordGame />
+      </div>
+    </GameProvider>
   );
 }
-
 export default App;
