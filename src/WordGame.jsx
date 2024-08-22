@@ -7,19 +7,34 @@ function WordGame() {
   const dispatch = useContext(GameDispatchContext);
 
   useEffect(() => {
+    setTimeout(() => {
+      if (state.status === "win") {
+        alert("You win!");
+        dispatch({ type: ACTIONS.RESET_GAME });
+      } else if (state.status === "lose") {
+        alert("You lose!");
+        dispatch({ type: ACTIONS.RESET_GAME });
+      }
+    }, 500);
+  }, [dispatch, state.status]);
+
+  useEffect(() => {
     function handleKeyDown(event) {
       if (event.key.match(/^[a-zA-Z]$/i)) {
         dispatch({ type: ACTIONS.ADD_LETTER, payload: event.key });
       } else if (event.key === "Backspace") {
         dispatch({ type: ACTIONS.REMOVE_LETTER });
+      } else if (event.key === "Enter") {
+        dispatch({ type: ACTIONS.SUBMIT_GUESS });
       }
     }
 
     window.addEventListener("keydown", handleKeyDown);
+    console.log("Event listener added");
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className="flex items-center justify-center grow flex-col overflow-hidden w-full h-screen border-black">
@@ -33,12 +48,24 @@ function WordGame() {
                 .fill(null)
                 .map((_, colIndex) => {
                   let letter = "";
+                  let color = "";
+                  if (
+                    rowIndex <= state.currentRow &&
+                    state.guessColor[rowIndex] &&
+                    state.guessColor[rowIndex][colIndex]
+                  ) {
+                    color = state.guessColor[rowIndex][colIndex];
+                  }
+
                   if (rowIndex === state.currentRow) {
                     letter = state.currentGuess[colIndex] || "";
+                  } else if (rowIndex < state.currentRow) {
+                    letter = state.guesses[rowIndex][colIndex];
                   }
+
                   return (
                     <div
-                      className="w-24 h-24 bg-transparent border-inherit border-2"
+                      className={`w-24 h-24 border-inherit border-2 ${color}`}
                       key={colIndex}
                     >
                       <div className="font-sans w-full h-full inline-flex items-center justify-center text-2xl leading-none font-bold align-middle box-border text-black select-none">
